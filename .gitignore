@@ -1,0 +1,9 @@
+target/
+*.class
+*.jar
+node_modules/
+build/
+.env
+.DS_Store
+.idea/
+*.iml
