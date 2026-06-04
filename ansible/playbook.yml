@@ -1,0 +1,33 @@
+---
+- name: Configuration du serveur Kubernetes
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Mise à jour du système
+      apt:
+        update_cache: yes
+        upgrade: yes
+
+    - name: Installation de Docker
+      apt:
+        name: docker.io
+        state: present
+
+    - name: Démarrage de Docker
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Installation de kubectl
+      shell: |
+        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+        chmod +x kubectl
+        mv kubectl /usr/local/bin/
+
+    - name: Ajout utilisateur au groupe docker
+      user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: yes
